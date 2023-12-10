@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Holtwood+One+SC&family=Imperial+Script&family=Inter:wght@200&display=swap");
+
+.card {
+  flex-basis: 25%;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-back {
+  width: 100%;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  position: absolute;
+  transition: 0.5s;
+}
+
+.card-back:hover {
+  bottom: 50%;
+}
