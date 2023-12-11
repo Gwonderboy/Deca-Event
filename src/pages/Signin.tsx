@@ -1,4 +1,3 @@
-// import "../index.css";
 import { Link } from "react-router-dom";
 import image from "/images/deca-signin.jpeg";
 import Button from "../components/Button";
@@ -59,7 +58,7 @@ export const SignIn = () => {
               Forgot your password?
             </a>
           </div>
-          <Button title={"Sign In"} text={"text-white"} bg={"bg-green-500"} />
+          <Button title={"Sign In"} text={"white"} bg={"#27AE60"} type={"submit"} />
         </form>
       </div>
     </div>

@@ -76,7 +76,7 @@ function SignUp() {
             </Link>{" "}
             to login.
           </p>
-          <Button title={"Sign Up"} text={"text-white"} bg={"bg-green-500"} />
+          <Button title={"Sign Up"} text={"white"} bg={"#27AE60"} type={"submit"} />
         </form>
       </div>
     </div>
