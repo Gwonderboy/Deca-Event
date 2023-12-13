@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const createEvent_1 = require("../../controllers/eventControllers/createEvent");
+const getUpcomingEvents_1 = require("../../controllers/eventControllers/getUpcomingEvents");
+const getSingleEvent_1 = require("../../controllers/eventControllers/getSingleEvent");
+const userEvent_1 = require("../../controllers/eventControllers/userEvent");
+const authorization_1 = require("../../middleware/authorization");
+const upload_1 = require("../../utilities/upload");
+const addComment_1 = require("../../controllers/eventControllers/addComment");
+const router = express_1.default.Router();
+router.post("/create", authorization_1.generalAuthoriser, upload_1.upload.single("event_image"), createEvent_1.createEvents);
+router.get("/upcoming_events", authorization_1.generalAuthoriser, getUpcomingEvents_1.getUpcomingEvents);
+router.get("/get-single-event/:id", authorization_1.generalAuthoriser, getSingleEvent_1.getSingleEvent);
+router.get("/get-my-events", authorization_1.generalAuthoriser, userEvent_1.userEvent);
+router.post("/add-comment/:id", authorization_1.generalAuthoriser, addComment_1.addComment);
+exports.default = router;
