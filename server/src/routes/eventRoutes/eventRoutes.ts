@@ -6,6 +6,8 @@ import { userEvent } from "../../controllers/eventControllers/userEvent";
 import { generalAuthoriser } from "../../middleware/authorization";
 import { upload } from "../../utilities/upload";
 import { addComment } from "../../controllers/eventControllers/addComment";
+import { likeEvent } from "../../controllers/eventControllers/likeEvent";
+import { dislikeEvent } from "../../controllers/eventControllers/dislikeEvent";
 
 const router = express.Router();
 
@@ -19,5 +21,7 @@ router.get("/upcoming_events", generalAuthoriser, getUpcomingEvents);
 router.get("/get-single-event/:id", generalAuthoriser, getSingleEvent);
 router.get("/get-my-events", generalAuthoriser, userEvent);
 router.post("/add-comment/:id", generalAuthoriser, addComment);
+router.post("/like/:id", generalAuthoriser, likeEvent);
+router.post("/dislike/:id", generalAuthoriser, dislikeEvent);
 
 export default router;
