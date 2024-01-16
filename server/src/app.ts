@@ -13,7 +13,6 @@ const app = express();
 
 dotenv.config();
 app.use(bodyParser.json());
-
 dotenv.config();
 app.use(bodyParser.json());
 

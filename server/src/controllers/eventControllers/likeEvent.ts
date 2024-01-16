@@ -23,30 +23,50 @@ export const likeEvent = async (req: JwtPayload, res: Response) => {
 
     if (!user?.isVerified) {
       return res.status(401).json({
-        status: `error`,
-        message: `Only verified users can like an event`,
+        status: "error",
+        message: "Only verified users can like an event",
       });
     }
 
-    if (!event.likes.includes(userId)) {
-      event.likes.push(userId);
+    const userLiker = {
+      id_of_user: user.id,
+      user_name: user.user_name,
+    };
+
+    const eventLiked = event.likesArr.findIndex(
+      (liker: any) => liker.id_of_user === userId
+    );
+
+    if (eventLiked !== -1) {
+      event.likesArr.splice(eventLiked, 1);
+      event.likes--;
+
       await event.save();
 
       res.status(200).json({
-        status: `success`,
-        message: `You like this event`,
+        status: "success",
+        method: req.method,
+        message: "You unliked this event",
         data: event,
       });
     } else {
-      res.status(400).json({
-        status: `error`,
-        message: `You have already liked this event`,
+      event.likesArr.push(userLiker);
+      event.likes++;
+
+      await event.save();
+
+      res.status(200).json({
+        status: "success",
+        method: req.method,
+        message: "You liked this event",
+        data: event,
       });
     }
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({
-      status: `error`,
-      message: `Unable to like event`,
+      status: "error",
+      message: "Unable to like/unlike event",
     });
   }
 };

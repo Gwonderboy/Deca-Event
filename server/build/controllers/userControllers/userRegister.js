@@ -44,14 +44,14 @@ const registerUser = async (request, response) => {
         if (checkUserEmail) {
             return response.status(400).json({
                 status: `error`,
-                message: `${email} already in use`,
+                message: `The email address ${email} already in use`,
             });
         }
         const checkUserName = await userModel_1.default.findOne({ where: { user_name } });
         if (checkUserName) {
             return response.status(400).json({
                 status: `error`,
-                message: `${user_name} already in use`,
+                message: `The username ${user_name} already in use`,
             });
         }
         if (password !== confirm_password) {
@@ -79,16 +79,20 @@ const registerUser = async (request, response) => {
             profile_picture: "",
             address: "",
             state: "",
+            identity_document: "",
             zip_code: "",
             role: userModel_1.role.USER,
             is_completed_profile: false,
             isVerified: false,
             isBlocked: false,
             reports: [],
+            isAddAccount: false,
             createdAt: new Date(),
             updatedAt: new Date(),
         });
-        const findUser = await userModel_1.default.findOne({ where: { email } });
+        const findUser = (await userModel_1.default.findOne({
+            where: { email },
+        }));
         if (!findUser) {
             return response.status(400).json({
                 status: `error`,
@@ -97,7 +101,7 @@ const registerUser = async (request, response) => {
         }
         const token = (0, helpers_1.generateRegisterToken)({
             id: findUser.id,
-            email: findUser.email
+            email: findUser.email,
         });
         await (0, notification_1.sendMail)(email, token);
         return response.status(200).json({

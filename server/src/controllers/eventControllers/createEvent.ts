@@ -25,24 +25,23 @@ export const createEvents = async (request: JwtPayload, response: Response) => {
       });
     }
     const eventId = v4();
-
     const userDetails = {
       id_of_organizer: userId,
-      name_of_organizer: user.user_name,
+      name_of_organizer: `${user.first_name} ${user.last_name}`,
       image_of_organizer: user.profile_picture,
+      email_of_organiser: user.email,
+      username_of_oganiser: user.user_name
     };
 
-    let organizers = [userDetails];
+    let organizers = [userDetails]
     const createdEvent = await Event.create({
       ...request.body,
       id: eventId,
       event_image: request.file.path,
-      comments: [],
       owner_id: userId,
       tickets_bought: 0,
       likes: 0,
       isBlocked: false,
-      reports: [],
       organizers: organizers,
       registered_users: [],
       dislikes: 0,

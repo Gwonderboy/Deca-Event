@@ -3,17 +3,19 @@ import { JwtPayload } from "jsonwebtoken";
 import Event, { EventAttributes } from "../../models/eventModel/eventModel";
 import User, { UserAttributes } from "../../models/userModel/userModel";
 import { v4 } from "uuid";
+import {Comment} from '../../models/commentModel/commentModel'
+
 
 export const addComment = async (req: JwtPayload, res: Response) => {
   try {
     const userId = req.user.id;
     const eventId = req.params.id;
-
+    console.log(eventId)
+    const comment = req.body.comments
     const event = await Event.findByPk(eventId);
     const user = await User.findOne({
         where: { id: userId },
       });
-
     if (!user) {
       return res.status(401).json({
         status: "error",
@@ -26,31 +28,41 @@ export const addComment = async (req: JwtPayload, res: Response) => {
         message: `Unable to find event`,
       });
     }
-
-
-    const commentDetails = {
-      user_image: user.profile_picture,
-      user_name: user.user_name,
-      comment: req.body,
+    const newComment = await Comment.create({
+      id: v4(),
+      owner_id: userId,
+      owner_name: user.user_name,
+      event_id: eventId,
+      comment,
+      likes: 0,
+      dislikes: 0,
+      likesArr: [],
+      dislikesArr: [],
       comment_time: new Date(),
-      comment_likes: 0,
-      comment_dislikes: 0,
-    };
+      createdAt: new Date(),
+      updatedAt: new Date()
 
-    event.comments.push(commentDetails);
+    })
 
-    await event.save();
+    const findComment = await Comment.findOne({where: {id:newComment.id}})
+    console.log(findComment)
+    if(findComment) {
+      return res.status(200).json({
+        status: `success`,
+        message: `Comment Successfully added`,
+        data: findComment
+      })
+    }
+    return res.status(400).json({
+      status: `error`,
+      message: `Unable to add Comment`,
+    })
 
-    res.status(200).json({
-      status: "success",
-      method: req.method,
-      message: "Comment added successfully",
-      data: event,
-    });
   } catch (error: any) {
+    console.log(error.message)
     res.status(500).json({
       status: "error",
-      message: "Unable to add comment",
+      message: "Internal Server error",
     });
   }
 };

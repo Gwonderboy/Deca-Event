@@ -29,6 +29,9 @@ User.init({
     phone_number: {
         type: sequelize_1.DataTypes.STRING,
     },
+    identity_document: {
+        type: sequelize_1.DataTypes.STRING
+    },
     isVerified: {
         type: sequelize_1.DataTypes.BOOLEAN,
     },
@@ -51,6 +54,10 @@ User.init({
         type: sequelize_1.DataTypes.STRING,
     },
     isBlocked: {
+        type: sequelize_1.DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
+    isAddAccount: {
         type: sequelize_1.DataTypes.BOOLEAN,
         defaultValue: false,
     },

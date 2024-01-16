@@ -25,10 +25,12 @@ export interface UserAttributes {
   zip_code: string;
   password: string;
   role: string;
+  identity_document: string;
   is_completed_profile: boolean;
   isVerified: boolean;
   isBlocked: boolean;
   reports: report[];
+  isAddAccount: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -56,6 +58,9 @@ User.init(
     phone_number: {
       type: DataTypes.STRING,
     },
+    identity_document: {
+      type: DataTypes.STRING
+    },
     isVerified: {
       type: DataTypes.BOOLEAN,
     },
@@ -79,6 +84,10 @@ User.init(
       type: DataTypes.STRING,
     },
     isBlocked: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    isAddAccount: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },

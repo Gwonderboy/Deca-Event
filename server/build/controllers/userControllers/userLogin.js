@@ -22,15 +22,14 @@ const userLogin = async (request, response) => {
         const user = (await userModel_1.default.findOne({
             where: { email: email },
         }));
-        console.log(user);
         if (!user) {
             return response.status(404).json({
                 status: `Access denied`,
-                message: `User with the email ${email} does not exist`,
+                message: `User with the email ${email} is not registered`,
             });
         }
         if (!user.isVerified) {
-            return response.status(400).json({
+            return response.status(402).json({
                 status: `error`,
                 message: `Only verified users can login, please check your email address ${user.email}, for a verification link sent to you.`
             });

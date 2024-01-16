@@ -29,7 +29,7 @@ export const registerUser = async (request: Request, response: Response) => {
     if (checkUserEmail) {
       return response.status(400).json({
         status: `error`,
-        message: `${email} already in use`,
+        message: `The email address ${email} already in use`,
       });
     }
 
@@ -38,7 +38,7 @@ export const registerUser = async (request: Request, response: Response) => {
     if (checkUserName) {
       return response.status(400).json({
         status: `error`,
-        message: `${user_name} already in use`,
+        message: `The username ${user_name} already in use`,
       });
     }
 
@@ -70,30 +70,32 @@ export const registerUser = async (request: Request, response: Response) => {
       profile_picture: "",
       address: "",
       state: "",
+      identity_document: "",
       zip_code: "",
       role: role.USER,
       is_completed_profile: false,
       isVerified: false,
       isBlocked: false,
       reports: [],
+      isAddAccount: false,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
-    const findUser = await User.findOne({ where: { email } }) as unknown as UserAttributes;
+    const findUser = (await User.findOne({
+      where: { email },
+    })) as unknown as UserAttributes;
     if (!findUser) {
       return response.status(400).json({
         status: `error`,
         message: `User not registered, contact admin`,
       });
     }
-    const token = generateRegisterToken(
-      {
+    const token = generateRegisterToken({
       id: findUser.id,
-      email: findUser.email
-      }
-    )
-    await sendMail(email, token)
+      email: findUser.email,
+    });
+    await sendMail(email, token);
     return response.status(200).json({
       status: `success`,
       message: `User Registered Successfully`,
