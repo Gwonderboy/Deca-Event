@@ -6,8 +6,11 @@ interface Props {
 }
 
 function Navbar(props: Props) {
+ 
+  
+  
   return (
-    <div className="w-full h-[72px] pl-[60px] pr-[120px] py-3.5 bg-white flex justify-between items-center">
+    <div className="w-full h-[72px] pl-[60px] pr-[120px] py-3.5 bg-white shadow-lg flex justify-between items-center">
       <div className="w-1/2">
         <form>
           <input
@@ -17,7 +20,6 @@ function Navbar(props: Props) {
           />
         </form>
       </div>
-
       <div className="justify-start items-center gap-2 flex ">
         <button>
           <img src={`${notice}`} />

@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 
-const Events = () => {
+interface Props {
+  placeholder: string;
+  text: string;
+  h: string;
+  onChange: (selectedEvent: any) => void;
+}
+
+const Events = (props: Props) => {
   interface Event {
     name: string;
     code: string;
@@ -12,32 +19,39 @@ const Events = () => {
     { name: "Charity", code: "FR" },
     { name: "Community", code: "CM" },
     { name: "Conference", code: "CF" },
+    { name: "Concert", code: "CT" },
     { name: "Corporate off-sites & executive meeting", code: "CEM" },
-    { name: "Exhibitions", code: "FR" },
+    { name: "Exhibition", code: "FR" },
     { name: "Fashion shows and red carpets", code: "FR" },
-    { name: "Festivals", code: "FR" },
+    { name: "Festival", code: "FR" },
     { name: "Fundraising", code: "FR" },
     { name: "Hybrid", code: "HY" },
-    { name: "Networking events", code: "FR" },
+    { name: "Networking", code: "FR" },
     { name: "Private Party", code: "PP" },
     { name: "Product launch", code: "PL" },
     { name: "Seminar", code: "SEM" },
     { name: "Sports and competition", code: "SP" },
     { name: "Team building", code: "TB" },
-    { name: "Trade shows", code: "FR" },
+    { name: "Trade show", code: "FR" },
     { name: "Virtual", code: "VR" },
-    { name: "Weddings", code: "FR" },
+    { name: "Wedding", code: "FR" },
     { name: "Workshop", code: "WS" },
+    { name: "Other", code: "OTHER"}
   ];
+
+  const handleEventChange = (e: DropdownChangeEvent) => {
+    setSelectedEvent(e.value);
+    props.onChange(e.value); // Call the parent onChange function with the selected event
+  };
   return (
     <div className="self-stretch bg-gray-200 rounded-[5px] justify-between items-center inline-flex">
       <Dropdown
         value={selectedEvent}
-        onChange={(e: DropdownChangeEvent) => setSelectedEvent(e.value)}
+        onChange={handleEventChange}
         options={events}
         optionLabel="name"
-        placeholder="Choose event type"
-        className="text-green-500 text-xs bg-gray-200 font-normal font-['Product Sans'] w-full md:w-14rem"
+        placeholder={props.placeholder}
+        className={`${props.text} bg-gray-200 font-normal font-['Product Sans'] w-full md:w-14rem`}
       />
     </div>
   );

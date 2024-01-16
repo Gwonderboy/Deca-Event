@@ -1,5 +1,9 @@
+import { useLocation, useParams } from "react-router-dom";
 import { useState } from "react";
 import Button from "./Button";
+import { useNavigate, redirect } from "react-router-dom";
+import { showErrorToast } from "../utility/toast";
+import Modal from "./modal";
 
 interface Props {
   date: string;
@@ -7,10 +11,34 @@ interface Props {
   title: string;
   description: string;
   image: string;
+  id?:string
+  event_details?: any
 }
 
 function Card(props: Props) {
   const [isHovered, setIsHovered] = useState(false);
+  const [showModal3, setShowModal3] = useState(false);
+const params = useLocation()
+
+  const handleEventPage = async(id:any, event_details:any)=>{
+    try{
+      console.log('event', event_details.owner_id)
+      const user:any = localStorage.getItem("user")
+      const mainUser = JSON.parse(user)
+      if(!user){
+        return showErrorToast("Only logged in users can view events")
+      }
+      if (user.isBlocked) {
+        return setShowModal3(true);
+      }
+      localStorage.setItem("event_id", id)
+      localStorage.setItem("event", JSON.stringify(event_details))
+      localStorage.setItem("location", params.pathname)
+      return event_details.owner_id === mainUser.id ? window.location.href = `/single-event-organizer/${id}` : window.location.href = `/single-event/${id}`
+    }catch(error:any){
+      console.log(error)
+    }
+  }
 
   return (
     <div
@@ -105,9 +133,17 @@ function Card(props: Props) {
             text={"white"}
             bg={"#27AE60"}
             type={"submit"}
+            onClick={() => handleEventPage(props.id, props.event_details)}
           />
         </div>
       </div>
+      {showModal3 && (
+        <Modal onClose={() => setShowModal3(false)}>
+          <p className="font-Inter text-center">
+          <span className="text-red-500">Your Account has been blocked, Please <a className="text-red-500" href="mailto:admin@example.com?subject=Blocked&body=Please%20Contact%20Admin">Click Here To Contact Admin</a></span>
+              </p>
+        </Modal>
+      )}
     </div>
   );
 }

@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 
-const Locations = () => {
+interface Props {
+  placeholder: string;
+  text: string;
+  h: string;
+  onChange: (selectedLocation: any) => void;
+}
+
+const Locations = (props: Props) => {
   interface Location {
     name: string;
     code: string;
@@ -21,15 +28,22 @@ const Locations = () => {
     { name: "Owerri", code: "OW" },
     { name: "Port Harcourt", code: "PH" },
   ];
+
+  const handleLocationChange = (e: DropdownChangeEvent) => {
+    setSelectedLocation(e.value);
+    props.onChange(e.value); // Call the parent onChange function with the selected location
+  };
+
+
   return (
     <div className="self-stretch rounded-[5px] justify-between items-center inline-flex">
       <Dropdown
         value={selectedLocation}
-        onChange={(e: DropdownChangeEvent) => setSelectedLocation(e.value)}
+        onChange={handleLocationChange}
         options={locations}
         optionLabel="name"
-        placeholder="Choose location"
-        className="text-green-500 text-xs bg-gray-200 font-normal font-['Product Sans'] w-full md:w-14rem"
+        placeholder={props.placeholder}
+        className={`${props.text} bg-gray-200 font-normal font-['Product Sans'] w-full md:w-14rem`}
       />
     </div>
   );

@@ -9,8 +9,41 @@ import Button from "../components/Button";
 import CalendarInput from "../components/calender";
 import CardContainer from "../components/CardContainer";
 import search from "../assets/search.svg";
+import axios from "../configurations/httpSetup";
+import { useState } from "react";
+import {showToast, showErrorToast} from '../utility/toast'
 
 export const LandingPage = () => {
+
+  const [filters, setFilters] = useState<any>({
+    eventType: '',
+    location: '',
+    date: '',
+  });
+  const handleSearch = async (event:any) => {
+    event.preventDefault();
+    try {
+      const response = await axios.get('/events/upcoming_events', {
+        params: {
+          eventType: filters.eventType,
+          location: filters.location,
+          date: filters.date,
+        },
+      });
+      setFilters(response.data.data)
+      showToast(response.data.message)
+    } catch (error:any) {
+      if (error.response) {
+        return showErrorToast(error.response.data.message);
+      }
+      if (error.request) {
+        return showErrorToast("Network Error");
+      }
+      if (error.message) {
+        return showErrorToast(error.message);
+      }
+    }
+  };
   return (
     <div className="flex flex-col justify-center min-h-screen w-full items-center">
       <nav className="w-full bg-gray-100 p-4 fixed top-0 z-40">
@@ -54,7 +87,7 @@ export const LandingPage = () => {
           <form
             action=""
             method="get"
-            className="md:w-full lg:w-full p-4 md:p-8 flex flex-col md:flex-row justify-center items-center"
+            className="md:w-full lg:w-full p-4 md:p-8 flex flex-col md:flex-row justify-center items-center gap-5"
           >
             <div className="mb-4 md:mb-0 md:w-1/3">
               <p className="text-gray-50 text-base font-normal font-Product mb-2">
@@ -64,27 +97,27 @@ export const LandingPage = () => {
                 placeholder={"Choose event type"}
                 text={"text-green-500 text-xs"}
                 h={""}
+                onChange={(eventType) => setFilters({ ...filters, eventType })}
               />
             </div>
-            <div className="mb-4 md:mb-0 md:w-1/3 cursor-pointer">
+            <div className="mb-4 md:mb-0 md:w-1/3">
               <p className="text-gray-50 text-base font-normal font-Product mb-2">
                 Location
               </p>
-              <Locations
-                placeholder={"Choose location"}
-                text={"text-green-500 text-xs"}
-                h={""}
-              />
+              <input title={"Location"} placeholder={"Enter Location"} type={"text"} onChange={(location) => setFilters({ ...filters, location })} className="self-stretch h-[46px] focus:outline-none p-2.5 bg-gray-50 font-Inter rounded-[5px] border-b-2 border-green-500 items-center gap-2.5 w-full md:w-64" />
             </div>
             <div className="mb-4 md:mb-0 md:w-1/3">
               <p className="text-gray-50 text-base font-normal font-Product mb-2">
                 When
               </p>
-              <CalendarInput />
+              <CalendarInput 
+                onChange={(date) => setFilters({ ...filters, date })}
+              />
             </div>
             <button
               type="submit"
               className="p-2.5 bg-emerald-900 rounded-[5px] justify-center items-center hover:bg-emerald-700"
+              onClick={handleSearch}
             >
               <img src={`${search}`} style={{ alignItems: "center" }} />
             </button>
@@ -102,16 +135,18 @@ export const LandingPage = () => {
             </h2>
             <div className="w-16 h-1 bg-green-500"></div>
           </div>
-          <div className="flex flex-col md:flex-row gap-5 ">
+          {/* <div className="flex flex-col md:flex-row gap-5 ">
             <Events
               placeholder={"Any category"}
               text={"text-grey-500 text-xs"}
               h={""}
+              onChange={(eventType) => setFilters({ ...filters, eventType })}
             />
             <Locations
               placeholder={"Choose location"}
               text={"text-grey text-xs"}
               h={""}
+              onChange={(location) => setFilters({ ...filters, location })}
             />
             <div className="h-10 px-4 py-2 bg-gray-50 rounded-[5px] justify-between items-center flex">
               <input
@@ -121,9 +156,9 @@ export const LandingPage = () => {
                 className="text-slate-500 text-xs font-normal font-Inter bg-gray-50"
               />
             </div>
-          </div>
+          </div> */}
         </div>
-        <CardContainer />
+        <CardContainer filters={filters}/>
       </div>
       <div className="h-12 bg-green-500 rounded-md text-white mt-16 mb-8">
         <Button

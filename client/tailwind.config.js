@@ -7,9 +7,9 @@ export default {
   theme: {
     extend: {
       fontFamily:{
-        Holtwood:['Holtwood One SC', 'serif'],
-        Imperial:['Imperial Script', 'cursive'],
-        Inter:['Inter', 'sans-serif']
+        'Holtwood':['Holtwood One SC', 'serif'],
+        'Imperial':['Imperial Script', 'cursive'],
+        'Inter':['Inter', 'sans-serif']
       }
     },
   },
