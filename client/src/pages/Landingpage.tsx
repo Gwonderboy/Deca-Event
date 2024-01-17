@@ -1,10 +1,7 @@
-// import axios from "../configurations/httpSetup";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../index.css";
 import { FaLinkedin, FaInstagram, FaFacebookF } from "react-icons/fa6";
 import Events from "../components/events";
-import Locations from "../components/locations";
-import { Link } from "react-router-dom";
 import Button from "../components/Button";
 import CalendarInput from "../components/calender";
 import CardContainer from "../components/CardContainer";
@@ -12,14 +9,26 @@ import search from "../assets/search.svg";
 import axios from "../configurations/httpSetup";
 import { useState } from "react";
 import {showToast, showErrorToast} from '../utility/toast'
+import LandingNavbar from "../components/LandingNavbar";
 
 export const LandingPage = () => {
+
+  const user: any = localStorage.getItem("user");
+  const newUser = JSON.parse(user);
+
+  console.log(newUser)
 
   const [filters, setFilters] = useState<any>({
     eventType: '',
     location: '',
     date: '',
   });
+  const getProfileImage = (profile_picture:any) => {
+    return profile_picture.length === 0
+      ? "/images/event1.png"
+      : profile_picture;
+  };
+  
   const handleSearch = async (event:any) => {
     event.preventDefault();
     try {
@@ -46,33 +55,10 @@ export const LandingPage = () => {
   };
   return (
     <div className="flex flex-col justify-center min-h-screen w-full items-center">
-      <nav className="w-full bg-gray-100 p-4 fixed top-0 z-40">
-        <div className="w-10/12 mx-auto flex items-center justify-between">
-          <div className="text-center">
-            <Link to={"/"} className="no-underline">
-              <span className="text-gray-900 text-3xl font-Holtwood leading-14">
-                DECA
-              </span>
-              <span className="text-green-500 text-3xl font-Holtwood leading-14">
-                EVENTS
-              </span>
-            </Link>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link to={"/signin"} className="no-underline">
-              <Button title={"Login"} text={"#27AE60"} bg={"white"} type={""} />
-            </Link>
-            <Link to={"/signup"} className="no-underline">
-              <Button
-                title={"Signup"}
-                text={"white"}
-                bg={"#27AE60"}
-                type={""}
-              />
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <LandingNavbar
+        name={newUser.first_name}
+        image={getProfileImage(newUser.profile_picture)}
+      />
 
       {/* ----------------------- Header ----------------------- */}
 
@@ -135,28 +121,6 @@ export const LandingPage = () => {
             </h2>
             <div className="w-16 h-1 bg-green-500"></div>
           </div>
-          {/* <div className="flex flex-col md:flex-row gap-5 ">
-            <Events
-              placeholder={"Any category"}
-              text={"text-grey-500 text-xs"}
-              h={""}
-              onChange={(eventType) => setFilters({ ...filters, eventType })}
-            />
-            <Locations
-              placeholder={"Choose location"}
-              text={"text-grey text-xs"}
-              h={""}
-              onChange={(location) => setFilters({ ...filters, location })}
-            />
-            <div className="h-10 px-4 py-2 bg-gray-50 rounded-[5px] justify-between items-center flex">
-              <input
-                type="date"
-                name=""
-                id=""
-                className="text-slate-500 text-xs font-normal font-Inter bg-gray-50"
-              />
-            </div>
-          </div> */}
         </div>
         <CardContainer filters={filters}/>
       </div>

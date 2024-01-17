@@ -5,3 +5,7 @@
 #tickets tr:nth-child(even){background-color: #f6fef9;}
 
 #tickets tr:hover {background-color: #ebfcf1;}
+
+.profile_drop {
+    transition: max-height 0.3s;
+}

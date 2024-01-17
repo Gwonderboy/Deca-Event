@@ -73,7 +73,7 @@ function Sidebar() {
       <div className="w-[107px] grow shrink basis-0 px-8 py-[50px] flex-col justify-start items-start gap-[50px] flex">
         <Link to={"/"} className="text-center no-underline">
           <span className="text-white text-[32px] font-normal font-Imperial leading-[44.80px]">
-            R
+            D
           </span>
           <span className="text-emerald-900 text-[32px] font-normal font-Imperial leading-[44.80px]">
             E
