@@ -15,6 +15,7 @@ import {
   upComingEvents,
 } from "../axiosSettings/events/eventAxios";
 import { useEffect, useState } from "react";
+import Adminsidebar from "../components/adminSideBar";
 
 function SingleEvent() {
   const user: any = localStorage.getItem("user");
@@ -149,7 +150,7 @@ function SingleEvent() {
   return (
     <div className="w-screen">
       <div className="fixed">
-        <Sidebar />
+      {mainUser.role === "Admin" ? <Adminsidebar /> : <Sidebar />}
       </div>
       <div className="pl-24">
         <div>
@@ -181,7 +182,7 @@ function SingleEvent() {
             date={`${events.event_date}, ${events.event_time}`}
             image={events.event_image}
           />
-          <div className="w-12 mt-2 flex justify-between ...">
+          {/* <div className="w-12 mt-2 flex justify-between ...">
             <button 
             // onClick={}
             >
@@ -192,7 +193,7 @@ function SingleEvent() {
             >
               <SlDislike />
             </button>
-          </div>
+          </div> */}
           {/* description and map */}
           <div>
             <SingleEventBody

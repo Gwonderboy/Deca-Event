@@ -4,23 +4,38 @@ import { IoPricetags } from "react-icons/io5";
 import { GiTicket } from "react-icons/gi";
 import Button from "../components/Button";
 import Input from "../components/Input";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { formatCurrency } from "../utility/currencyFormat";
 import TicketsDropdown, { Tickets } from "../components/dropdownTickets";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import { getSingeEvent } from "../axiosSettings/events/eventAxios";
+import { getSingeEvent, paystack, userPays } from "../axiosSettings/events/eventAxios";
 import EventsTicketsDropdown, {Ticketz} from "../components/eventTicketDropdown";
+import { useNavigate } from "react-router-dom";
+import { showErrorToast } from "../utility/toast";
+import { checkUserDetails, getEarningsHist } from "../axiosSettings/user/userAxios";
+import Adminsidebar from "../components/adminSideBar";
 
 const Reg4Event = () => {
+
   const [counter, setCounter] = useState(0);
   const [selectedTicket, setSelectedTicket] = useState<Tickets | any>(null);
   const [cart, setCart] = useState<Tickets[]>([]);
 
+  const [getEarnings, setGetEarnings] = useState<any>([])
   const [events, setEvents] = useState<any>({})
   const user:any = localStorage.getItem("user")
   const mainUser:any = JSON.parse(user)
 
+  const [paymentLoading, setPaymentLoading] = useState(false)
+
+  const [userDetails, setUserDetails] = useState({
+    email: "",
+    password: ""
+  })
+
+
+  const navigate = useNavigate()
   const eventId = localStorage.getItem("event_id")
   const incrementCounter = () => {
     setCounter(counter + 1);
@@ -71,37 +86,99 @@ const Reg4Event = () => {
     setCart(updatedCart);
   };
 
-  const handlePaymentSubmit = (event:any) => {
-    event.preventDefault();
-    console.log("Tickets Purchased Successfully");
+  const handlePasswordChange = (event:React.ChangeEvent<HTMLInputElement>) => {
+    const {name, value} = event.target
+    setUserDetails({
+      ...userDetails,
+      [name]: value,
+      email:  mainUser.email
+    })
   };
-
-  const submitFunction = async(event:any)=>{
-    try{
-      event.preventDefault();
-      let total = calculateTotal()
-      localStorage.setItem("user_email", mainUser.email)
-      localStorage.setItem("amount", total.toString())
-  
-    }catch(error:any){
-      console.log(error.message)
-    }
-  }
-  //EMAIL = mainUser.email
-  //AMOUNT = calculateTotal()
-  //let amount = localStorage.getItem("amount")
-  //amount = Number(amount)
-  //const email = localStorage.getItem("user_email")
 
   const fetchEventData = async() => {
     try{
       const response = await getSingeEvent(eventId)
       setEvents(response.data)
-      console.log(response)
     }catch(error:any){
       console.log(error.message)
     }
   }
+
+  const fetchEarnings = async()=>{
+    try{
+      const response = await getEarningsHist()
+      setGetEarnings(response.data.getAllEarnings)
+    }catch(error:any){
+      console.log(error.message)
+    }
+  }
+
+  const submitFunction = async(event:any)=>{
+    try{
+      event.preventDefault();
+      setPaymentLoading(true)
+      if(cart.length === 0){
+        setPaymentLoading(false)
+        return showErrorToast("At least One Ticket Must Be Selected")
+      }
+
+
+      if(userDetails.password.length === 0){
+        setPaymentLoading(false)
+        return showErrorToast("Input Your Password")
+      }
+
+      const userData = {
+        email: userDetails.email,
+        password: userDetails.password
+      }
+
+      const userCheck = await checkUserDetails(userData)
+
+      if(userCheck.status !== 200){
+        setPaymentLoading(false)
+        return showErrorToast(userCheck.data.message)
+      }
+      let total:any = calculateTotal()
+      localStorage.setItem("user_email", mainUser.email)
+      localStorage.setItem("amount", total.toString())
+
+      const mainBody = new FormData()
+      mainBody.append("cart", JSON.stringify(cart))
+      mainBody.append("totalAmount", total)
+
+      const payment = await userPays(eventId, mainBody)
+
+      if(payment.status !== 200){
+        setPaymentLoading(false)
+        return showErrorToast(payment.data.message)
+      }
+      const paymentData = {
+        email: mainUser.email,
+        amount: total
+      }
+
+      fetchEventData()
+      fetchEarnings()
+      
+      const response = await paystack(paymentData)
+  
+      let url = response.data.data.authorization_url
+      window.location.href = url
+      
+      setCounter(0)
+      setSelectedTicket(null)
+      setCart([])
+      setEvents([])
+      setPaymentLoading(false)
+
+      return navigate(`/ticketHistory`)
+    }catch(error:any){
+      console.log(error.message)
+    }
+  }
+
+
 
   useEffect(()=>{
     fetchEventData()
@@ -111,7 +188,7 @@ const Reg4Event = () => {
   return (
     <>
           <div className="fixed left-0">
-        <Sidebar />
+          {mainUser.role === "Admin" ? <Adminsidebar /> : <Sidebar />}
       </div>
 
       <div className="pl-20">
@@ -140,6 +217,9 @@ const Reg4Event = () => {
             title={"Password"}
             placeholder={"Enter your password"}
             type={"password"}
+            name={"password"}
+            onChange={handlePasswordChange}
+            value={userDetails.password}
           />
           <div className="w-full text-gray-900 text-base font-Inter">
             <table className="w-full gap-5">
@@ -263,7 +343,7 @@ const Reg4Event = () => {
               </div>
             </div>
             <Button
-              title={"PAYMENTS"}
+              title={ paymentLoading ? "LOADING..." : "PAYMENTS"}
               text={"white"}
               bg={"#4caf50"}
               type={"submit"}

@@ -1,4 +1,8 @@
+import { useState, useEffect } from "react";
 import { FaEnvelope, FaFacebookF, FaInstagram, FaTelegram, FaTwitter } from "react-icons/fa6";
+import { SlDislike, SlLike } from "react-icons/sl";
+import { getSingeEvent, userDislikesAnEvent, userLikesAnEvent } from "../axiosSettings/events/eventAxios";
+import { showErrorToast, showSuccessToast } from "../utility/toast";
 
 interface Props {
   description: string;
@@ -8,11 +12,85 @@ interface Props {
 }
 
 function SingleEventBody(props: Props) {
+
+  const [event, setEvent] = useState<any>({})
+const eventId = localStorage.getItem("event_id")
+  const fetchData = async()=>{
+    try{
+      const response = await getSingeEvent(eventId)
+      setEvent(response.data)
+      return response.data.data
+      }catch(error:any){
+          console.log(error)
+      }
+  }
+
+  useEffect(()=>{
+    fetchData();
+}, [])
+
+const userLikesEvent = async()=>{
+  try{
+    const response = await userLikesAnEvent(eventId)
+    if(response.status !== 200){
+      return showErrorToast(response.data.message)
+    }
+
+    showSuccessToast(response.data.message)
+    return fetchData()
+  }catch (error: any) {
+    if (error.response) {
+      return showErrorToast(error.response.data.message);
+    } else if (error.request) {
+      return showErrorToast("Network Error. Please try again later.");
+    } else {
+      return showErrorToast("Error occurred. Please try again.");
+    }
+  }
+}
+const userDislikesEvent = async()=>{
+  try{
+    const response = await userDislikesAnEvent(eventId)
+    if(response.status !== 200){
+      return showErrorToast(response.data.message)
+    }
+
+    showSuccessToast(response.data.message)
+    return fetchData()
+  }catch (error: any) {
+    if (error.response) {
+      return showErrorToast(error.response.data.message);
+    } else if (error.request) {
+      return showErrorToast("Network Error. Please try again later.");
+    } else {
+      return showErrorToast("Error occurred. Please try again.");
+    }
+  }
+}
+
   return (
     <div className="flex justify-between pt-5">
       <div className="w-6/12">
         <p className="font-medium">Description</p>
-        <p className="font-Inter h-[30%] overflow-y-scroll">{props.description}</p>
+        <p className="font-Inter h-[10%] overflow-y-scroll">{props.description}</p>
+        <div className="w-[300px] h-[100px] mt-2 flex justify-between">
+            <button 
+            onClick={userLikesEvent}
+            >
+              <span className="hover:text-green-800 text-green-500">
+              <SlLike className="w-[100px] h-[50px]" />
+              <span>{event.likesArr?.length === 1 ? <p>{event.likes} like</p>: <p>{event.likes} likes</p>}</span>
+              </span>
+            </button>
+            <button 
+            onClick={userDislikesEvent}
+            >
+              <span className="hover:text-red-800 text-red-500">
+              <SlDislike className="w-[100px] h-[50px]" />
+              <span>{event.dislikesArr?.length === 1 ? <p>{event.dislikes} dislike</p>: <p>{event.dislikes} dislikes</p>}</span>
+              </span>
+            </button>
+          </div>
         <p className="pt-3 font-medium">Hours</p>
         <p className="font-Inter">
           Time <span className="text-green-500">{props.time}</span>

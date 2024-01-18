@@ -10,6 +10,7 @@ import {
   MdKeyboardDoubleArrowLeft,
   MdKeyboardDoubleArrowRight,
 } from "react-icons/md";
+import Adminsidebar from "../../components/adminSideBar";
 
 export const AdminDashboard = () => {
   const user: any = localStorage.getItem("user");
@@ -66,7 +67,7 @@ export const AdminDashboard = () => {
   return (
     <>
       <div className="fixed left-0">
-        <Sidebar />
+        <Adminsidebar />
       </div>
 
       <div className="pl-20">

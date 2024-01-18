@@ -1,5 +1,6 @@
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
+import { SlLike, SlDislike } from "react-icons/sl";
 import {
   FaArrowLeft,
   FaEnvelope,
@@ -15,9 +16,10 @@ import Button from "../components/Button";
 import "./table.css";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getEventComments, getSingeEvent, addEventComments, upComingEvents, userDeleteEvent } from "../axiosSettings/events/eventAxios";
+import { getEventComments, getSingeEvent, addEventComments, upComingEvents, userDeleteEvent, userDislikesAnEvent, userLikesAnEvent } from "../axiosSettings/events/eventAxios";
 import { showErrorToast, showSuccessToast } from "../utility/toast";
 import Modal from "../components/modal";
+import Adminsidebar from "../components/adminSideBar";
 
 function SingleEventOrganizer() {
   const user:any = localStorage.getItem("user")
@@ -65,6 +67,7 @@ function SingleEventOrganizer() {
   const fetchData = async()=>{
     try{
       const response = await getSingeEvent(eventId)
+      console.log(response.data)
       setEvent(response.data)
       return response.data.data
       }catch(error:any){
@@ -168,10 +171,50 @@ function SingleEventOrganizer() {
       text: '#FFFFFF', // Replace with your desired color
     },
   ]
+
+  const userLikesEvent = async()=>{
+    try{
+      const response = await userLikesAnEvent(eventId)
+      if(response.status !== 200){
+        return showErrorToast(response.data.message)
+      }
+  
+      showSuccessToast(response.data.message)
+      return fetchData()
+    }catch (error: any) {
+      if (error.response) {
+        return showErrorToast(error.response.data.message);
+      } else if (error.request) {
+        return showErrorToast("Network Error. Please try again later.");
+      } else {
+        return showErrorToast("Error occurred. Please try again.");
+      }
+    }
+  }
+  const userDislikesEvent = async()=>{
+    try{
+      const response = await userDislikesAnEvent(eventId)
+      if(response.status !== 200){
+        return showErrorToast(response.data.message)
+      }
+  
+      showSuccessToast(response.data.message)
+      return fetchData()
+    }catch (error: any) {
+      if (error.response) {
+        return showErrorToast(error.response.data.message);
+      } else if (error.request) {
+        return showErrorToast("Network Error. Please try again later.");
+      } else {
+        return showErrorToast("Error occurred. Please try again.");
+      }
+    }
+  }
+  
   return (
     <div className="w-screen pb-5">
       <div className="fixed">
-        <Sidebar />
+      {mainUser.role === "Admin" ? <Adminsidebar /> : <Sidebar />}
       </div>
       <div className="pl-24">
         <div>
@@ -269,6 +312,24 @@ function SingleEventOrganizer() {
               </p>
               </div>
               </div>
+              <div className="w-[300px] h-[100px] mt-2 flex justify-between">
+            <button 
+            onClick={userLikesEvent}
+            >
+              <span className="hover:text-green-800 text-green-500">
+              <SlLike className="w-[100px] h-[50px]" />
+              <span>{event.likesArr?.length === 1 ? <p>{event.likes} like</p>: <p>{event.likes} likes</p>}</span>
+              </span>
+            </button>
+            <button 
+            onClick={userDislikesEvent}
+            >
+              <span className="hover:text-red-800 text-red-500">
+              <SlDislike className="w-[100px] h-[50px]" />
+              <span>{event.dislikesArr?.length === 1 ? <p>{event.dislikes} dislike</p>: <p>{event.dislikes} dislikes</p>}</span>
+              </span>
+            </button>
+          </div>
               <p className="text-black font-medium pt-3">Share with friends</p>
               <div>
                 <div className="w-32 h-8 md:w-96 flex gap-3">
@@ -360,45 +421,38 @@ function SingleEventOrganizer() {
              ))}
              {!comments && <p>No comments yet.</p>}
           </div>
-          <div className="w-full">
+          <br />
+          <div className="w-full bg-gray-100">
             <div className="text-gray-900 text-base text-center font-medium leading-snug tracking-tight py-4">
               Purchased Tickets
             </div>
-            <table className="w-full text-gray-500 font-Inter text-xs">
+            <table className="w-full overflow-y-scroll text-gray-500 font-Inter text-xs">
               <thead className="w-full">
                 <td className="w-1/4">NAME</td>
                 <td className="w-1/4">EMAIL</td>
-                <td className="w-1/4">TICKET TYPE</td>
-                <td className="w-1/4">TOTAL</td>
+                <td className="w-1/4">DATE PURCHASED</td>
+                <td className="w-1/4">TOTAL TICKETS</td>
+                <td className="w-1/4">TOTAL AMOUNT</td>
               </thead>
-              <tbody>
+              <br />
+              {event.registered_users?.length > 0 ? (event.registered_users.map((user:any, index:any)=>(
+              <tbody key={index}>
                 <tr className="table-style">
                   <td className="flex">
                     <img
-                      src="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg"
+                      src={user.image_of_user}
                       alt="profile_pic"
                       className="w-7 h-7 relative rounded-[200px] border-2 border-gray-300"
                     />{" "}
-                    <p className="pl-3">John Doe</p>{" "}
+                    <p className="pl-3">{user.name_of_user}</p>{" "}
                   </td>
-                  <td>jd@gmail.com</td>
-                  <td>VIP</td>
-                  <td>1</td>
-                </tr>
-                <tr className="table-style">
-                  <td className="flex table-style">
-                    <img
-                      src="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg"
-                      alt="profile_pic"
-                      className="w-7 h-7 relative rounded-[200px] border-2 border-gray-300"
-                    />{" "}
-                    <p className="pl-3">John Doe</p>{" "}
-                  </td>
-                  <td>jd@gmail.com</td>
-                  <td>VIP</td>
-                  <td>1</td>
+                  <td>{user.email_of_user}</td>
+                  <td>{user.date_purchased}</td>
+                  <td>{user.no_of_tickets}</td>
+                  <td>{user.total_amount_paid}</td>
                 </tr>
               </tbody>
+              ))):(<p>No Registered Users Yet</p>)}
             </table>
           </div>
         </div>

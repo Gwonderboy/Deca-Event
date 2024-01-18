@@ -122,3 +122,30 @@ export const resendVerificationLink = async (body:any)=>{
       return error.response
     }
   }
+
+  export const checkUserDetails = async(body:any) => {
+    try{
+      const response = await axios.post("/users/check", body)
+    return response
+    }catch(error:any){
+      return error.response
+    }
+  }
+
+  export const getTicketHistory = async() => {
+    try{
+      const response = await axios.get("/users/tickets")
+    return response.data
+    }catch(error:any){
+      return error.response
+    }
+  }
+
+  export const getEarningsHist = async() => {
+    try{
+      const response = await axios.get("/users/earnings")
+    return response
+    }catch(error:any){
+      return error.response
+    }
+  }

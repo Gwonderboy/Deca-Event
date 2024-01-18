@@ -1,47 +1,40 @@
+// import axios from "../configurations/httpSetup";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../index.css";
 import { FaLinkedin, FaInstagram, FaFacebookF } from "react-icons/fa6";
 import Events from "../components/events";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import CalendarInput from "../components/calender";
 import CardContainer from "../components/CardContainer";
 import search from "../assets/search.svg";
 import axios from "../configurations/httpSetup";
 import { useState } from "react";
-import {showToast, showErrorToast} from '../utility/toast'
-import LandingNavbar from "../components/LandingNavbar";
+import { showToast, showErrorToast } from "../utility/toast";
 
 export const LandingPage = () => {
-
   const user: any = localStorage.getItem("user");
   const newUser = JSON.parse(user);
-
-  console.log(newUser)
+  const navigate = useNavigate();
 
   const [filters, setFilters] = useState<any>({
-    eventType: '',
-    location: '',
-    date: '',
+    eventType: "",
+    location: "",
+    date: "",
   });
-  const getProfileImage = (profile_picture:any) => {
-    return profile_picture.length === 0
-      ? "/images/event1.png"
-      : profile_picture;
-  };
-  
-  const handleSearch = async (event:any) => {
+  const handleSearch = async (event: any) => {
     event.preventDefault();
     try {
-      const response = await axios.get('/events/upcoming_events', {
+      const response = await axios.get("/events/upcoming_events", {
         params: {
           eventType: filters.eventType,
           location: filters.location,
           date: filters.date,
         },
       });
-      setFilters(response.data.data)
-      showToast(response.data.message)
-    } catch (error:any) {
+      setFilters(response.data.data);
+      showToast(response.data.message);
+    } catch (error: any) {
       if (error.response) {
         return showErrorToast(error.response.data.message);
       }
@@ -53,12 +46,72 @@ export const LandingPage = () => {
       }
     }
   };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
+    return showToast(`Goodbye ${newUser.first_name}`);
+  };
   return (
     <div className="flex flex-col justify-center min-h-screen w-full items-center">
-      <LandingNavbar
-        name={newUser.first_name}
-        image={getProfileImage(newUser.profile_picture)}
-      />
+      <nav className="w-full bg-gray-100 p-4 fixed top-0 z-40">
+        <div className="w-10/12 mx-auto flex items-center justify-between">
+          <div className="text-center">
+            <Link to={"/"} className="no-underline">
+              <span className="text-gray-900 text-3xl font-Holtwood leading-14">
+                DECA
+              </span>
+              <span className="text-green-500 text-3xl font-Holtwood leading-14">
+                EVENTS
+              </span>
+            </Link>
+          </div>
+          <div className="flex items-center gap-3">
+            {newUser ? (
+              <div className="dropdown">
+                <div className="flex gap-3">
+                  <p className="text-gray-700 text-base font-normal font-Inter">
+                    Welcome, {newUser.first_name}!
+                  </p>
+                  {/* Display profile picture if available */}
+                  {newUser.profile_picture && (
+                    <img
+                      src={newUser.profile_picture}
+                      alt="Profile"
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                  )}
+                </div>
+                <div className="dropdown-content">
+                  <Link to={"/upcoming"}>Dashboard</Link>
+                  <a href="" onClick={handleLogout} className="no-underline">
+                    Logout
+                  </a>
+                </div>
+              </div>
+            ) : (
+              <>
+                <Link to={"/signin"} className="no-underline">
+                  <Button
+                    title={"Login"}
+                    text={"#27AE60"}
+                    bg={"white"}
+                    type={""}
+                  />
+                </Link>
+                <Link to={"/signup"} className="no-underline">
+                  <Button
+                    title={"Signup"}
+                    text={"white"}
+                    bg={"#27AE60"}
+                    type={""}
+                  />
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      </nav>
 
       {/* ----------------------- Header ----------------------- */}
 
@@ -90,13 +143,19 @@ export const LandingPage = () => {
               <p className="text-gray-50 text-base font-normal font-Product mb-2">
                 Location
               </p>
-              <input title={"Location"} placeholder={"Enter Location"} type={"text"} onChange={(location) => setFilters({ ...filters, location })} className="self-stretch h-[46px] focus:outline-none p-2.5 bg-gray-50 font-Inter rounded-[5px] border-b-2 border-green-500 items-center gap-2.5 w-full md:w-64" />
+              <input
+                title={"Location"}
+                placeholder={"Enter Location"}
+                type={"text"}
+                onChange={(location) => setFilters({ ...filters, location })}
+                className="self-stretch h-[46px] focus:outline-none p-2.5 bg-gray-50 font-Inter rounded-[5px] border-b-2 border-green-500 items-center gap-2.5 w-full md:w-64"
+              />
             </div>
             <div className="mb-4 md:mb-0 md:w-1/3">
               <p className="text-gray-50 text-base font-normal font-Product mb-2">
                 When
               </p>
-              <CalendarInput 
+              <CalendarInput
                 onChange={(date) => setFilters({ ...filters, date })}
               />
             </div>
@@ -122,7 +181,7 @@ export const LandingPage = () => {
             <div className="w-16 h-1 bg-green-500"></div>
           </div>
         </div>
-        <CardContainer filters={filters}/>
+        <CardContainer filters={filters} />
       </div>
       <div className="h-12 bg-green-500 rounded-md text-white mt-16 mb-8">
         <Button
@@ -162,9 +221,15 @@ export const LandingPage = () => {
           </button>
         </form>
         <div className="w-full md:w-[292px] my-7 h-12 flex justify-center items-center gap-5 text-center text-white font-normal font-product-sans">
-          <a href="" className="no-underline text-white">Home</a>
-          <a href="" className="no-underline text-white">About</a>
-          <a href="" className="no-underline text-white">Get in touch</a>
+          <a href="" className="no-underline text-white">
+            Home
+          </a>
+          <a href="" className="no-underline text-white">
+            About
+          </a>
+          <a href="" className="no-underline text-white">
+            Get in touch
+          </a>
         </div>
         <div className="w-11/12 top-20 md:mt-18 border border-white"></div>
         <div className=" w-11/12 flex justify-between mt-10">

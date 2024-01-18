@@ -17,6 +17,7 @@ import { HostedEventPage } from "./pages/hostedEvents";
 import { AdminDashboard } from "./pages/admin/adminDashboard";
 import { UserAccount } from "./pages/accountDetails";
 import EarningHistory from "./pages/earnings";
+import SingleAdmin from "./pages/admin/adminSingle";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/ticketHistory" element={<TicketHistory />} />
           <Route path="/earningHistory" element={<EarningHistory />} />
+          <Route path="/admin_single/:id" element={<SingleAdmin />} />
         </Routes>
       </main>
       <ToastContainer />

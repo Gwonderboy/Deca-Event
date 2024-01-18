@@ -82,23 +82,69 @@ export const createEvent = async(body:any)=>{
   }catch(err:any){
       return err.response
   }
-    // /delete_event/:id
   }
 
-  export const userLikeEvent = async(id:any) => {
+
+  export const paystack = async(body:any) => {
+    try{
+      const response = await axios.post(`paystack/pay`, body)
+      return response
+  }catch(err:any){
+    return err.response
+}
+  }
+
+  export const userPays = async(id:any, body:any) => {
+    try{
+      const response = await axios.post(`events/payment/${id}`, body)
+      return response
+  }catch(err:any){
+    return err.response
+}
+  }
+
+  export const userLikesAnEvent = async(id:any) => {
     try{
       const response = await axios.post(`events/like/${id}`)
-        return response;
+      return response
   }catch(err:any){
-      return err.response
+    return err.response
+}
   }
-  }
-  
-  export const userDislikeEvent = async(id:any) => {
+
+
+  export const userDislikesAnEvent = async(id:any) => {
     try{
       const response = await axios.post(`events/dislike/${id}`)
-        return response;
+      return response
   }catch(err:any){
-      return err.response
+    return err.response
+}
   }
+
+
+  export const adminBlocksEvent = async(id:any) => {
+    try{
+      const response = await axios.post(`admin/block_event/${id}`)
+      return response
+  }catch(err:any){
+    return err.response
+}
+  }
+
+  export const adminUnblocksEvent = async(id:any) => {
+    try{
+      const response = await axios.post(`admin/unblock_event/${id}`)
+      return response
+  }catch(err:any){
+    return err.response
+}
+  }
+  export const getEventReport = async(id:any) => {
+    try{
+      const response = await axios.get(`admin/get_reports/${id}`)
+      return response
+  }catch(err:any){
+    return err.response
+}
   }

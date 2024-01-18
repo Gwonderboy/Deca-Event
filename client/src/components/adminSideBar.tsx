@@ -8,10 +8,10 @@ import { IoTicketOutline } from "react-icons/io5";
 import { IoHomeOutline } from "react-icons/io5";
 import { showToast } from "../utility/toast";
 import { useState } from "react";
-import { Modal } from "../components/modal";
+import { Modal } from "./modal";
 import { GiMoneyStack } from "react-icons/gi";
 
-function Sidebar() {
+function Adminsidebar() {
   const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
   const [showModal3, setShowModal3] = useState(false);
@@ -27,18 +27,18 @@ function Sidebar() {
 
   const handleEventCreation = async (e: any) => {
     try {
-      if (mainUser.is_completed_profile === false) {
-        return setShowModal(true);
-      }
-      if (mainUser.profile_picture.length === 0) {
-        return setShowModal2(true);
-      }
-      if (mainUser.isBlocked) {
-        return setShowModal3(true);
-      }
-      if(!mainUser.isAddAccount){
-        return setShowModal4(true)
-      }
+      // if (mainUser.is_completed_profile === false) {
+      //   return setShowModal(true);
+      // }
+      // if (mainUser.profile_picture.length === 0) {
+      //   return setShowModal2(true);
+      // }
+      // if (mainUser.isBlocked) {
+      //   return setShowModal3(true);
+      // }
+      // if(!mainUser.isAddAccount){
+      //   return setShowModal4(true)
+      // }
      return navigate("/create_event")
     } catch (err: any) {
       console.log(err);
@@ -62,7 +62,7 @@ function Sidebar() {
   ];
   const buttons3: any = [
     {
-      label: "click here to update bank account details",
+      label: "click here to update account details",
       onClick: () => navigate("/user_account"),
       bg: "#27AE60", // Replace with your desired color
       text: "#FFFFFF", // Replace with your desired color
@@ -81,7 +81,7 @@ function Sidebar() {
         </Link>
         <div className="flex-col justify-center items-center gap-8 flex ">
           <button className="hover:bg-white hover:bg-opacity-10 py-2 px-2 hover:rounded-xl active:bg-white active:bg-opacity-10 active:rounded-xl">
-            <Link to={"/upcomingevents"}>
+            <Link to={"/admin"}>
               <IoHomeOutline className="text-white text-3xl" />
             </Link>
           </button>
@@ -152,4 +152,4 @@ function Sidebar() {
   );
 }
 
-export default Sidebar;
+export default Adminsidebar;

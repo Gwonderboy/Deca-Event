@@ -12,6 +12,7 @@ import { showErrorToast, showToast } from "../utility/toast";
 import { createEvent } from "../axiosSettings/events/eventAxios";
 import { useNavigate } from "react-router-dom";
 import TimeDropdown from "../components/TimeDropdown";
+import Adminsidebar from "../components/adminSideBar";
 
 export const CreateEventPage = () => {
   const user: any = localStorage.getItem("user");
@@ -327,7 +328,7 @@ export const CreateEventPage = () => {
     <>
       <div>
         <div className="fixed left-0 z-20">
-          <Sidebar />
+        {mainUser.role === "Admin" ? <Adminsidebar /> : <Sidebar />}
         </div>
         <div className="pl-20 fixed top-0 w-full z-10">
           <Navbar

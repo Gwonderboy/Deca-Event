@@ -34,7 +34,7 @@ const params = useLocation()
       localStorage.setItem("event_id", id)
       localStorage.setItem("event", JSON.stringify(event_details))
       localStorage.setItem("location", params.pathname)
-      return event_details.owner_id === mainUser.id ? window.location.href = `/single-event-organizer/${id}` : window.location.href = `/single-event/${id}`
+      return mainUser.role === "Admin" ? window.location.href = `/admin_single/${id}` : event_details.owner_id === mainUser.id ? window.location.href = `/single-event-organizer/${id}` : window.location.href = `/single-event/${id}`
     }catch(error:any){
       console.log(error)
     }

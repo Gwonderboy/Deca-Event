@@ -67,7 +67,7 @@ function SingleEventHeader(props: Props) {
       showSuccessToast(response.data.message)
       setReport("")
       setShowModal(false)
-      console.log(response)
+      return setLoading(false)
     }catch (error: any) {
       if (error.response) {
         // Server responded with a status code other than 2xx
@@ -89,6 +89,11 @@ function SingleEventHeader(props: Props) {
       text: "#FFFFFF", // Replace with your desired color
     },
   ];
+
+  const closeReportModal = ()=>{
+    setLoading(false)
+    return setShowModal(false)
+  }
   return (
     <div
       className="w-full h-[595px] bg-neutral-900 bg-opacity-30 bg-cover bg-center rounded-[10px]"
@@ -143,10 +148,11 @@ function SingleEventHeader(props: Props) {
         </div>
       </div>
       {showModal && (
-        <Modal onClose={() => setShowModal(false)} buttons={buttons}>
-          <div className="h-[400px] w-[100%] text-center mb-[60px]">
-            <p>Please Type Your Report Below</p>
+        <Modal onClose={() => closeReportModal()} buttons={buttons}>
+          <div className="font-Inter h-[200px] w-[100%] text-center mb-[60px]">
+            <p className="font-Inter bold">Please Type Your Report Below</p>
             <textarea
+            placeholder="Not more than 20 words please"
               className="h-[100%] w-[100%] resize-none border border-gray-300 p-2"
               required
               onChange={(e)=> handleReportChange(e)}
