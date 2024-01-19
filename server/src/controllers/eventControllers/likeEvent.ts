@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { JwtPayload } from "jsonwebtoken";
-import Event, { EventAttributes } from "../../models/eventModel/eventModel";
-import User, { UserAttributes } from "../../models/userModel/userModel";
+import Event from "../../models/eventModel/eventModel";
+import User from "../../models/userModel/userModel";
 
 export const likeEvent = async (req: JwtPayload, res: Response) => {
   try {
@@ -24,49 +24,57 @@ export const likeEvent = async (req: JwtPayload, res: Response) => {
     if (!user?.isVerified) {
       return res.status(401).json({
         status: "error",
-        message: "Only verified users can like an event",
+        message:
+          "Only verified users can like an event, update your profile to be able to like this event",
       });
     }
 
-    const userLiker = {
-      id_of_user: user.id,
-      user_name: user.user_name,
-    };
+    // check if user already liked
+    for (let index = 0; index < event.likesArr.length; index++) {
+      if (event.likesArr[index] === userId) {
+        return res.status(402).json({
+          status: "error",
+          message: "You have already liked this event",
+        });
+      }
+    }
 
-    const eventLiked = event.likesArr.findIndex(
-      (liker: any) => liker.id_of_user === userId
+
+    //check if user disliked and change to like
+    let dislikesArray = event.dislikesArr
+    let dislikesNum = event.dislikes
+    
+    for (let index = 0; index < dislikesArray.length; index++) {
+      if (dislikesArray[index] === userId) {
+        dislikesArray.splice(index, 1);
+        dislikesNum--
+        index--;
+      }
+    }
+
+    await Event.update({dislikesArr:dislikesArray, dislikes:dislikesNum}, {where:{id:eventId}})
+
+
+
+    const likedArr = event.likesArr;
+    likedArr.push(userId);
+    let likings = event.likes + 1;
+
+
+    await Event.update(
+      { likesArr: likedArr, likes: likings },
+      { where: { id: eventId } }
     );
 
-    if (eventLiked !== -1) {
-      event.likesArr.splice(eventLiked, 1);
-      event.likes--;
-
-      await event.save();
-
-      res.status(200).json({
-        status: "success",
-        method: req.method,
-        message: "You unliked this event",
-        data: event,
-      });
-    } else {
-      event.likesArr.push(userLiker);
-      event.likes++;
-
-      await event.save();
-
-      res.status(200).json({
-        status: "success",
-        method: req.method,
-        message: "You liked this event",
-        data: event,
-      });
-    }
+    return res.status(200).json({
+      status: "success",
+      message: "You have liked this event",
+    });
   } catch (error: any) {
-    console.error(error);
+    console.log(error.message)
     res.status(500).json({
       status: "error",
-      message: "Unable to like/unlike event",
+      message: "Unable to like event",
     });
   }
 };

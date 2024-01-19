@@ -73,6 +73,12 @@ Event.init({
     likes: {
         type: sequelize_1.DataTypes.INTEGER,
     },
+    likesArr: {
+        type: sequelize_1.DataTypes.JSON
+    },
+    dislikesArr: {
+        type: sequelize_1.DataTypes.JSON
+    },
     isBlocked: {
         type: sequelize_1.DataTypes.BOOLEAN
     },

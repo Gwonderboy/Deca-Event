@@ -1,9 +1,9 @@
 import { Response } from "express";
 import { JwtPayload } from "jsonwebtoken";
-import Event, { EventAttributes } from "../../models/eventModel/eventModel";
-import User, { UserAttributes } from "../../models/userModel/userModel";
+import Event from "../../models/eventModel/eventModel";
+import User from "../../models/userModel/userModel";
 
-export const dislikeEvent = async (req: JwtPayload, res: Response) => {
+export const disLikeEvent = async (req: JwtPayload, res: Response) => {
   try {
     const userId = req.user.id;
     const eventId = req.params.id;
@@ -24,49 +24,55 @@ export const dislikeEvent = async (req: JwtPayload, res: Response) => {
     if (!user?.isVerified) {
       return res.status(401).json({
         status: "error",
-        message: "Only verified users can dislike an event",
+        message:
+          "Only verified users can like an event, update your profile to be able to like this event",
       });
     }
 
-    const userDisliker = {
-      id_of_user: user.id,
-      user_name: user.user_name,
-    };
+    let liked;
 
-    const eventDisliked = event.dislikesArr.findIndex(
-      (disliker:any) => disliker.id_of_user === userId
+    //check if user already disliked
+    for (let index = 0; index < event.dislikesArr.length; index++){
+      if (event.dislikesArr[index] === userId) {
+        liked = true;
+        return res.status(401).json({
+          status: "error",
+          message: "You have already disliked this event",
+        });
+      }
+    }
+    //check if user liked and change to dislike
+    let likesArray = event.likesArr
+    let likesNum = event.likes
+    for (let index = 0; index < likesArray.length; index++) {
+      if (likesArray[index] === userId) {
+        likesArray.splice(index, 1);
+        likesNum--
+        index--;
+      }
+    }
+
+    await Event.update({likesArr:likesArray, likes:likesNum}, {where:{id:eventId}})
+
+    const dislikedArr = event.dislikesArr;
+    dislikedArr.push(userId);
+    let dislikings = event.dislikes + 1;
+
+    await Event.update(
+      { dislikesArr: dislikedArr, dislikes: dislikings },
+      { where: { id: eventId } }
     );
 
-    if (eventDisliked !== -1) {
-      event.dislikesArr.splice(eventDisliked, 1);
-      event.dislikes--;
+    return res.status(200).json({
+      status: "success",
+      message: "You have disliked this event",
+    });
 
-      await event.save();
-
-      res.status(200).json({
-        status: "success",
-        method: req.method,
-        message: "You undisliked this event",
-        data: event,
-      });
-    } else {
-      event.dislikesArr.push(userDisliker);
-      event.dislikes++;
-
-      await event.save();
-
-      res.status(200).json({
-        status: "success",
-        method: req.method,
-        message: "You disliked this event",
-        data: event,
-      });
-    }
   } catch (error: any) {
-    console.error(error);
+    console.log(error.message)
     res.status(500).json({
       status: "error",
-      message: "Unable to dislike/undislike event",
+      message: "Unable to dislike event",
     });
   }
 };

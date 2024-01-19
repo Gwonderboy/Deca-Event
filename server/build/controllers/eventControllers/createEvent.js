@@ -13,12 +13,12 @@ const createEvents = async (request, response) => {
         const user = (await userModel_1.default.findOne({
             where: { id: userId },
         }));
-        if (!user.is_completed_profile) {
-            return response.status(401).json({
-                status: `error`,
-                message: `Only users with completed profiles can organize events`,
-            });
-        }
+        // if (!user.is_completed_profile) {
+        //   return response.status(401).json({
+        //     status: `error`,
+        //     message: `Only users with completed profiles can organize events`,
+        //   });
+        // }
         if (!user.isVerified) {
             return response.status(401).json({
                 status: `error`,
@@ -37,10 +37,13 @@ const createEvents = async (request, response) => {
         const createdEvent = await eventModel_1.default.create({
             ...request.body,
             id: eventId,
-            event_image: request.file.path,
             owner_id: userId,
+            ticket_types: JSON.parse(request.body.ticket_types),
             tickets_bought: 0,
             likes: 0,
+            likesArr: [],
+            dislikesArr: [],
+            event_image: request?.file?.path,
             isBlocked: false,
             organizers: organizers,
             registered_users: [],

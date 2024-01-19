@@ -1,8 +1,9 @@
 import { adminAuthoriser } from "../../middleware/authorization";
 import Event, { EventAttributes } from "../../models/eventModel/eventModel";
 import { Response, Request, NextFunction } from "express";
+import {Report} from "../../models/reportModel/reportModel"
 
-export const eventBlocked = async (
+export const getEventReports = async (
   request: Request,
   response: Response,
   next: NextFunction
@@ -15,14 +16,19 @@ export const eventBlocked = async (
       return response.status(404).json({ error: "Event not found" });
     }
 
-    // if (event.isBlocked) {
-    //   return response.status(400).json({ error: "Event is already blocked" });
-    // }
+    const reports = await Report.findAll({where: {event_id: eventId}})
 
-    await Event.update({ isBlocked: true }, {where: {id:eventId}});
+    if(reports.length === 0){
+        return response.status(400).json({
+            status: `error`,
+            message: "No reports found",
+          });
+    }
 
     return response.status(200).json({
-      message: "Event blocked successfully",
+            status: `success`,
+            message: "Reports Found Successfully",
+            reports
     });
   } catch (error) {
     console.error(error);

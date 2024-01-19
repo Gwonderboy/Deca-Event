@@ -43,11 +43,12 @@ export enum eventType {
     OTHER = "Other",
   }
 
-type event_registered_users = {
+  type event_registered_users = {
     id_of_user: string;
     name_of_user: string;
-    ticket_types: [];
+    email_of_user:string;
     no_of_tickets: number;
+    date_purchased: Date;
     total_amount_paid: number;
 }
 
@@ -64,6 +65,8 @@ export interface EventAttributes {
     ticket_types: ticketType[]
     no_of_attendees: string;
     owner_id: string;
+    likesArr: [];
+    dislikesArr: [];
     tickets_bought: number;
     organizers?: organizer[];
     likes: number;
@@ -120,6 +123,12 @@ tickets_bought: {
 likes: {
     type: DataTypes.INTEGER,
 },
+likesArr: {
+    type: DataTypes.JSON    
+  },
+  dislikesArr: {
+    type: DataTypes.JSON    
+  },
 isBlocked: {
     type: DataTypes.BOOLEAN
 },

@@ -1,6 +1,7 @@
 import { Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import Event, { EventAttributes } from "../models/eventModel/eventModel";
+import User from "../models/userModel/userModel";
 
 export const generalAuthoriser = async (
   request: JwtPayload,
@@ -58,7 +59,9 @@ export const adminAuthoriser = async (
     }
 
     const decode:any = jwt.verify(mainToken, `${process.env.APP_SECRET}`);
-    if(decode.role !== 'Admin'){
+    const admin:any = await User.findOne({where: {id:decode.id}})
+
+    if(admin.role !== 'Admin'){
       return response.status(400).json({
         status: `error`,
         message: `You are not allowed to access this resource. Contact the admin`

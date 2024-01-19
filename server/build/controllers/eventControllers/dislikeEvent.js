@@ -3,10 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.dislikeEvent = void 0;
+exports.disLikeEvent = void 0;
 const eventModel_1 = __importDefault(require("../../models/eventModel/eventModel"));
 const userModel_1 = __importDefault(require("../../models/userModel/userModel"));
-const dislikeEvent = async (req, res) => {
+const disLikeEvent = async (req, res) => {
     try {
         const userId = req.user.id;
         const eventId = req.params.id;
@@ -23,43 +23,46 @@ const dislikeEvent = async (req, res) => {
         if (!user?.isVerified) {
             return res.status(401).json({
                 status: "error",
-                message: "Only verified users can dislike an event",
+                message: "Only verified users can like an event, update your profile to be able to like this event",
             });
         }
-        const userDisliker = {
-            id_of_user: user.id,
-            user_name: user.user_name,
-        };
-        const eventDisliked = event.dislikesArr.findIndex((disliker) => disliker.id_of_user === userId);
-        if (eventDisliked !== -1) {
-            event.dislikesArr.splice(eventDisliked, 1);
-            event.dislikes--;
-            await event.save();
-            res.status(200).json({
-                status: "success",
-                method: req.method,
-                message: "You undisliked this event",
-                data: event,
-            });
+        let liked;
+        //check if user already disliked
+        for (let index = 0; index < event.dislikesArr.length; index++) {
+            if (event.dislikesArr[index] === userId) {
+                liked = true;
+                return res.status(401).json({
+                    status: "error",
+                    message: "You have already disliked this event",
+                });
+            }
         }
-        else {
-            event.dislikesArr.push(userDisliker);
-            event.dislikes++;
-            await event.save();
-            res.status(200).json({
-                status: "success",
-                method: req.method,
-                message: "You disliked this event",
-                data: event,
-            });
+        //check if user liked and change to dislike
+        let likesArray = event.likesArr;
+        let likesNum = event.likes;
+        for (let index = 0; index < likesArray.length; index++) {
+            if (likesArray[index] === userId) {
+                likesArray.splice(index, 1);
+                likesNum--;
+                index--;
+            }
         }
+        await eventModel_1.default.update({ likesArr: likesArray, likes: likesNum }, { where: { id: eventId } });
+        const dislikedArr = event.dislikesArr;
+        dislikedArr.push(userId);
+        let dislikings = event.dislikes + 1;
+        await eventModel_1.default.update({ dislikesArr: dislikedArr, dislikes: dislikings }, { where: { id: eventId } });
+        return res.status(200).json({
+            status: "success",
+            message: "You have disliked this event",
+        });
     }
     catch (error) {
-        console.error(error);
+        console.log(error.message);
         res.status(500).json({
             status: "error",
-            message: "Unable to dislike/undislike event",
+            message: "Unable to dislike event",
         });
     }
 };
-exports.dislikeEvent = dislikeEvent;
+exports.disLikeEvent = disLikeEvent;

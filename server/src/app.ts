@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import express from "express";
 import dotenv from "dotenv";
 import { HttpError } from "http-errors";
 import cookieParser from "cookie-parser";
@@ -8,6 +8,8 @@ import bodyParser from "body-parser";
 import { database } from "./configurations";
 import userRoutes from "./routes/userRoutes/userRoutes";
 import eventRoutes from "./routes/eventRoutes/eventRoutes";
+import paystackRoutes from "./routes/paystackRoutes/paystackRoute"
+import adminRoutes from "./routes/adminRoutes/adminRoutes"
 
 const app = express();
 
@@ -23,6 +25,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use("/users", userRoutes);
 app.use("/events", eventRoutes);
+app.use("/paystack", paystackRoutes);
+app.use("/admin", adminRoutes)
 
 database
   .sync({})
