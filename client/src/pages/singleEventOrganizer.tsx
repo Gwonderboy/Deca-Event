@@ -5,13 +5,20 @@ import {
   FaArrowLeft,
   FaEnvelope,
   FaFacebookF,
-  FaInstagram,
   FaTelegram,
   FaThumbsDown,
   FaThumbsUp,
   FaTrash,
   FaTwitter,
+  FaWhatsapp,
 } from "react-icons/fa6";
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  TelegramShareButton,
+  EmailShareButton,
+  WhatsappShareButton
+} from "react-share";
 import Button from "../components/Button";
 import "./table.css";
 import { useState, useEffect } from "react";
@@ -210,7 +217,8 @@ function SingleEventOrganizer() {
       }
     }
   }
-  
+  const url = window.location.href;
+
   return (
     <div className="w-screen pb-5">
       <div className="fixed">
@@ -333,21 +341,37 @@ function SingleEventOrganizer() {
               <p className="text-black font-medium pt-3">Share with friends</p>
               <div>
                 <div className="w-32 h-8 md:w-96 flex gap-3">
-                  <a href="facebook.com" className="w-8 h-8">
-                    <FaFacebookF className="text-white w-full h-full p-2 bg-green-500 rounded-full" />
-                  </a>
-                  <a href="instagram.com" className="w-8 h-8">
-                    <FaInstagram className="text-white w-full h-full p-2 bg-green-500 rounded-full" />
-                  </a>
-                  <a href="instagram.com" className="w-8 h-8">
-                    <FaTelegram className="text-white w-full h-full p-2 bg-green-500 rounded-full" />
-                  </a>
-                  <a href="instagram.com" className="w-8 h-8">
-                    <FaTwitter className="text-white w-full h-full p-2 bg-green-500 rounded-full" />
-                  </a>
-                  <a href="instagram.com" className="w-8 h-8">
-                    <FaEnvelope className="text-white w-full h-full p-2 bg-green-500 rounded-full" />
-                  </a>
+                <FacebookShareButton
+              url={url}
+              style={{ width: "2rem", height: "2rem" }}
+            >
+              <FaFacebookF className="text-white w-full h-full p-2 bg-green-500 rounded-full" />
+            </FacebookShareButton>
+            <WhatsappShareButton
+            url={url}
+            style={{ width: "2rem", height: "2rem" }}
+            >
+            <FaWhatsapp className="text-white w-full h-full p-2 bg-green-500 rounded-full" />
+            </WhatsappShareButton>
+            <TelegramShareButton
+              url={url}
+              style={{ width: "2rem", height: "2rem" }}
+            >
+              <FaTelegram className="text-white w-full h-full p-2 bg-green-500 rounded-full" />
+            </TelegramShareButton>
+            <TwitterShareButton
+              url={url}
+              style={{ width: "2rem", height: "2rem" }}
+            >
+              <FaTwitter className="text-white w-full h-full p-2 bg-green-500 rounded-full" />
+            </TwitterShareButton>
+            <EmailShareButton
+            url={url}
+            style={{ width: "2rem", height: "2rem" }}
+            >
+            <FaEnvelope className="text-white w-full h-full p-2 bg-green-500 rounded-full" />
+
+            </EmailShareButton>
                 </div>
               </div>
             </div>

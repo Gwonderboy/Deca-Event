@@ -4,7 +4,7 @@ import Card from "../../components/Cards";
 import Events from "../../components/events";
 import Locations from "../../components/locations";
 import { useEffect, useState } from "react";
-import { upComingEvents } from "../../axiosSettings/events/eventAxios";
+import { getFlaggedEvent, upComingEvents } from "../../axiosSettings/events/eventAxios";
 import { showErrorToast } from "../../utility/toast";
 import {
   MdKeyboardDoubleArrowLeft,
@@ -22,16 +22,36 @@ export const AdminDashboard = () => {
     date: "",
   });
   const [getEvents, setGetEvents] = useState<any>([]);
+  const [getFlaggedEvents, setGetFlaggedEvents] = useState<any>([]);
 
   const params = {
     eventType: filters.eventType,
     location: filters.location,
     date: filters.date,
   };
+
+  function formatDateTime(dateString: any) {
+    const date = new Date(dateString);
+
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear().toString().slice(-2); // Get last two digits of the year
+
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    const formattedDay = day < 10 ? `0${day}` : day;
+    const formattedMonth = month < 10 ? `0${month}` : month;
+    const formattedHours = hours < 10 ? `0${hours}` : hours;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+    return `${formattedDay}/${formattedMonth}/${year} ${formattedHours}:${formattedMinutes}`;
+}
+
   const fetchData = async () => {
     try {
       const response = await upComingEvents(params);
-      console.log(response.data);
+
       if (response.data.length !== 0) {
         return setGetEvents(response.data);
       } else {
@@ -48,9 +68,35 @@ export const AdminDashboard = () => {
     }
   };
 
+  const fetchFlaggedData = async () => {
+    try {
+      const response = await getFlaggedEvent();
+
+      console.log(response)
+      if (response.data.length !== 0) {
+        return setGetFlaggedEvents(response.data.reportedEvents);
+      } else {
+        // return showErrorToast("No upcoming Events found");
+        null
+      }
+    } catch (error: any) {
+      if (error.response) {
+        return showErrorToast(error.response.data.message);
+      } else if (error.request) {
+        return showErrorToast("Network Error. Please try again later.");
+      } else {
+        return showErrorToast("Error occurred. Please try again.");
+      }
+    }
+  };
+
   useEffect(() => {
     fetchData();
   }, [filters]);
+
+  useEffect(() => {
+    fetchFlaggedData()
+  }, []);
 
   const scrollEvents = (direction: "left" | "right") => {
     const currentDate = filters.date ? new Date(filters.date) : new Date();
@@ -164,17 +210,17 @@ export const AdminDashboard = () => {
             </div>
           </div>
         </div>
-        {getEvents.length ? (
+        {getFlaggedEvents?.length ? (
           <div className="flex-wrap mt-6 ml-40 gap-3 flex">
-            {getEvents.map((event: any) => (
-              <div key={event.dataValues.id}>
+            {getFlaggedEvents.map((event: any) => (
+              <div key={event.id}>
                 <Card
-                  image={event.dataValues.event_image}
-                  date={event.event_date}
-                  ticketsNo={event.dataValues.tickets_bought}
-                  title={event.dataValues.title}
-                  description={event.dataValues.description}
-                  id={event.dataValues.id}
+                  image={event.event_image}
+                  date={formatDateTime(event.event_date)}
+                  ticketsNo={event.tickets_bought}
+                  title={event.title}
+                  description={event.description}
+                  id={event.id}
                   event_details={event}
                 />
               </div>

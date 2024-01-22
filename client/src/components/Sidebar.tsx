@@ -48,24 +48,24 @@ function Sidebar() {
     {
       label: "click here to complete profile",
       onClick: () => navigate("/profile"),
-      bg: "#27AE60", // Replace with your desired color
-      text: "#FFFFFF", // Replace with your desired color
+      bg: "#27AE60",
+      text: "#FFFFFF",
     },
   ];
   const buttons2: any = [
     {
       label: "click here to update profile picture",
       onClick: () => navigate("/profile"),
-      bg: "#27AE60", // Replace with your desired color
-      text: "#FFFFFF", // Replace with your desired color
+      bg: "#27AE60",
+      text: "#FFFFFF",
     },
   ];
   const buttons3: any = [
     {
       label: "click here to update bank account details",
       onClick: () => navigate("/user_account"),
-      bg: "#27AE60", // Replace with your desired color
-      text: "#FFFFFF", // Replace with your desired color
+      bg: "#27AE60",
+      text: "#FFFFFF",
     },
   ];
   return (

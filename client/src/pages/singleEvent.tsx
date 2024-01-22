@@ -182,19 +182,6 @@ function SingleEvent() {
             date={`${events.event_date}, ${events.event_time}`}
             image={events.event_image}
           />
-          {/* <div className="w-12 mt-2 flex justify-between ...">
-            <button 
-            // onClick={}
-            >
-              <SlLike />
-            </button>
-            <button 
-            // onClick={}
-            >
-              <SlDislike />
-            </button>
-          </div> */}
-          {/* description and map */}
           <div>
             <SingleEventBody
               description={events.description}

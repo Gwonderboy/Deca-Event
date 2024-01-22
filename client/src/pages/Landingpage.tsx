@@ -1,9 +1,8 @@
-// import axios from "../configurations/httpSetup";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../index.css";
 import { FaLinkedin, FaInstagram, FaFacebookF } from "react-icons/fa6";
 import Events from "../components/events";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Button from "../components/Button";
 import CalendarInput from "../components/calender";
 import CardContainer from "../components/CardContainer";
@@ -14,8 +13,7 @@ import { showToast, showErrorToast } from "../utility/toast";
 
 export const LandingPage = () => {
   const user: any = localStorage.getItem("user");
-  const newUser = JSON.parse(user);
-  const navigate = useNavigate();
+  const mainUser = JSON.parse(user);
 
   const [filters, setFilters] = useState<any>({
     eventType: "",
@@ -49,8 +47,7 @@ export const LandingPage = () => {
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate("/");
-    return showToast(`Goodbye ${newUser.first_name}`);
+    return showToast(`Goodbye ${mainUser.first_name}`);
   };
   return (
     <div className="flex flex-col justify-center min-h-screen w-full items-center">
@@ -67,16 +64,15 @@ export const LandingPage = () => {
             </Link>
           </div>
           <div className="flex items-center gap-3">
-            {newUser ? (
-              <div className="dropdown">
+            {mainUser ? (
+              <div className="dropdown cursor-pointer">
                 <div className="flex gap-3">
                   <p className="text-gray-700 text-base font-normal font-Inter">
-                    Welcome, {newUser.first_name}!
+                    Welcome, {mainUser.first_name}!
                   </p>
-                  {/* Display profile picture if available */}
-                  {newUser.profile_picture && (
+                  {mainUser.profile_picture && (
                     <img
-                      src={newUser.profile_picture}
+                      src={mainUser.profile_picture}
                       alt="Profile"
                       className="w-8 h-8 rounded-full object-cover"
                     />
