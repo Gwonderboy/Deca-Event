@@ -1,7 +1,11 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteEvent = void 0;
 const eventModel_1 = require("../../models/eventModel/eventModel");
+const reportModel_1 = __importDefault(require("../../models/reportModel/reportModel"));
 const deleteEvent = async (request, response) => {
     try {
         const userId = request.user.id;
@@ -21,6 +25,7 @@ const deleteEvent = async (request, response) => {
                 message: `Unable to delete Event`
             });
         }
+        await reportModel_1.default.destroy({ where: { event_id: eventId } });
         const allEvents = await eventModel_1.Event.findAll({});
         return response.status(200).json({
             status: `success`,

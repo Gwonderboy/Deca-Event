@@ -1,6 +1,7 @@
 import {Response} from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 import {Event} from '../../models/eventModel/eventModel'
+import Report from '../../models/reportModel/reportModel'
 
 export const deleteEvent = async(request:JwtPayload, response:Response) => {
     try{
@@ -21,6 +22,8 @@ export const deleteEvent = async(request:JwtPayload, response:Response) => {
                 message: `Unable to delete Event`
             })
         }
+        await Report.destroy({where: {event_id:eventId}})
+        
         const allEvents = await Event.findAll({})
         return response.status(200).json({
             status: `success`,
