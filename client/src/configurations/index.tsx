@@ -17,7 +17,7 @@ const config = (): Config => {
                 apiHost:
                     environment === "development"
                         ? "https://deca-event.onrender.com"
-                        : "http://localhost:3050/",
+                        : "https://deca-event.onrender.com",
             },
         });
     }
