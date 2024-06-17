@@ -22,7 +22,7 @@ const Events = (props: Props) => {
     { name: "Concert", code: "CT" },
     { name: "Corporate off-sites & executive meeting", code: "CEM" },
     { name: "Exhibition", code: "FR" },
-    { name: "Fashion show and red carpet", code: "FR" },
+    { name: "Fashion shows and red carpets", code: "FR" },
     { name: "Festival", code: "FR" },
     { name: "Fundraising", code: "FR" },
     { name: "Hybrid", code: "HY" },

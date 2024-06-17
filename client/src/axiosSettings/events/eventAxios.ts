@@ -148,3 +148,12 @@ export const createEvent = async(body:any)=>{
     return err.response
 }
   }
+
+  export const getFlaggedEvent = async() => {
+    try{
+      const response = await axios.get(`admin/flagged`)
+      return response
+  }catch(err:any){
+    return err.response
+}
+  }

@@ -1,7 +1,9 @@
+// import axios from "../configurations/httpSetup";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../index.css";
 import { FaLinkedin, FaInstagram, FaFacebookF } from "react-icons/fa6";
 import Events from "../components/events";
+import Locations from "../components/locations";
 import { Link } from "react-router-dom";
 import Button from "../components/Button";
 import CalendarInput from "../components/calender";
@@ -9,30 +11,28 @@ import CardContainer from "../components/CardContainer";
 import search from "../assets/search.svg";
 import axios from "../configurations/httpSetup";
 import { useState } from "react";
-import { showToast, showErrorToast } from "../utility/toast";
+import {showToast, showErrorToast} from '../utility/toast'
 
 export const LandingPage = () => {
-  const user: any = localStorage.getItem("user");
-  const mainUser = JSON.parse(user);
 
   const [filters, setFilters] = useState<any>({
-    eventType: "",
-    location: "",
-    date: "",
+    eventType: '',
+    location: '',
+    date: '',
   });
-  const handleSearch = async (event: any) => {
+  const handleSearch = async (event:any) => {
     event.preventDefault();
     try {
-      const response = await axios.get("/events/upcoming_events", {
+      const response = await axios.get('/events/upcoming_events', {
         params: {
           eventType: filters.eventType,
           location: filters.location,
           date: filters.date,
         },
       });
-      setFilters(response.data.data);
-      showToast(response.data.message);
-    } catch (error: any) {
+      setFilters(response.data.data)
+      showToast(response.data.message)
+    } catch (error:any) {
       if (error.response) {
         return showErrorToast(error.response.data.message);
       }
@@ -43,11 +43,6 @@ export const LandingPage = () => {
         return showErrorToast(error.message);
       }
     }
-  };
-
-  const handleLogout = () => {
-    localStorage.clear();
-    return showToast(`Goodbye ${mainUser.first_name}`);
   };
   return (
     <div className="flex flex-col justify-center min-h-screen w-full items-center">
@@ -64,47 +59,17 @@ export const LandingPage = () => {
             </Link>
           </div>
           <div className="flex items-center gap-3">
-            {mainUser ? (
-              <div className="dropdown cursor-pointer">
-                <div className="flex gap-3">
-                  <p className="text-gray-700 text-base font-normal font-Inter">
-                    Welcome, {mainUser.first_name}!
-                  </p>
-                  {mainUser.profile_picture && (
-                    <img
-                      src={mainUser.profile_picture}
-                      alt="Profile"
-                      className="w-8 h-8 rounded-full object-cover"
-                    />
-                  )}
-                </div>
-                <div className="dropdown-content">
-                  <Link to={"/upcoming"}>Dashboard</Link>
-                  <a href="" onClick={handleLogout} className="no-underline">
-                    Logout
-                  </a>
-                </div>
-              </div>
-            ) : (
-              <>
-                <Link to={"/signin"} className="no-underline">
-                  <Button
-                    title={"Login"}
-                    text={"#27AE60"}
-                    bg={"white"}
-                    type={""}
-                  />
-                </Link>
-                <Link to={"/signup"} className="no-underline">
-                  <Button
-                    title={"Signup"}
-                    text={"white"}
-                    bg={"#27AE60"}
-                    type={""}
-                  />
-                </Link>
-              </>
-            )}
+            <Link to={"/signin"} className="no-underline">
+              <Button title={"Login"} text={"#27AE60"} bg={"white"} type={""} />
+            </Link>
+            <Link to={"/signup"} className="no-underline">
+              <Button
+                title={"Signup"}
+                text={"white"}
+                bg={"#27AE60"}
+                type={""}
+              />
+            </Link>
           </div>
         </div>
       </nav>
@@ -139,19 +104,13 @@ export const LandingPage = () => {
               <p className="text-gray-50 text-base font-normal font-Product mb-2">
                 Location
               </p>
-              <input
-                title={"Location"}
-                placeholder={"Enter Location"}
-                type={"text"}
-                onChange={(location) => setFilters({ ...filters, location })}
-                className="self-stretch h-[46px] focus:outline-none p-2.5 bg-gray-50 font-Inter rounded-[5px] border-b-2 border-green-500 items-center gap-2.5 w-full md:w-64"
-              />
+              <input title={"Location"} placeholder={"Enter Location"} type={"text"} onChange={(location) => setFilters({ ...filters, location })} className="self-stretch h-[46px] focus:outline-none p-2.5 bg-gray-50 font-Inter rounded-[5px] border-b-2 border-green-500 items-center gap-2.5 w-full md:w-64" />
             </div>
             <div className="mb-4 md:mb-0 md:w-1/3">
               <p className="text-gray-50 text-base font-normal font-Product mb-2">
                 When
               </p>
-              <CalendarInput
+              <CalendarInput 
                 onChange={(date) => setFilters({ ...filters, date })}
               />
             </div>
@@ -176,8 +135,30 @@ export const LandingPage = () => {
             </h2>
             <div className="w-16 h-1 bg-green-500"></div>
           </div>
+          {/* <div className="flex flex-col md:flex-row gap-5 ">
+            <Events
+              placeholder={"Any category"}
+              text={"text-grey-500 text-xs"}
+              h={""}
+              onChange={(eventType) => setFilters({ ...filters, eventType })}
+            />
+            <Locations
+              placeholder={"Choose location"}
+              text={"text-grey text-xs"}
+              h={""}
+              onChange={(location) => setFilters({ ...filters, location })}
+            />
+            <div className="h-10 px-4 py-2 bg-gray-50 rounded-[5px] justify-between items-center flex">
+              <input
+                type="date"
+                name=""
+                id=""
+                className="text-slate-500 text-xs font-normal font-Inter bg-gray-50"
+              />
+            </div>
+          </div> */}
         </div>
-        <CardContainer filters={filters} />
+        <CardContainer filters={filters}/>
       </div>
       <div className="h-12 bg-green-500 rounded-md text-white mt-16 mb-8">
         <Button
@@ -217,15 +198,9 @@ export const LandingPage = () => {
           </button>
         </form>
         <div className="w-full md:w-[292px] my-7 h-12 flex justify-center items-center gap-5 text-center text-white font-normal font-product-sans">
-          <a href="" className="no-underline text-white">
-            Home
-          </a>
-          <a href="" className="no-underline text-white">
-            About
-          </a>
-          <a href="" className="no-underline text-white">
-            Get in touch
-          </a>
+          <a href="" className="no-underline text-white">Home</a>
+          <a href="" className="no-underline text-white">About</a>
+          <a href="" className="no-underline text-white">Get in touch</a>
         </div>
         <div className="w-11/12 top-20 md:mt-18 border border-white"></div>
         <div className=" w-11/12 flex justify-between mt-10">

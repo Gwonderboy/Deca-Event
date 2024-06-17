@@ -620,7 +620,7 @@ export const CreateEventPage = () => {
             <h1 className="text-[#27AE60]">Terms and Conditions</h1><br />
             <div className="text-left">
             <h5>1. Acceptance of Terms</h5>
-            <p>By using Deca Events, you agree to comply with and be bound by
+            <p>By using Royal Events, you agree to comply with and be bound by
             these Terms and Conditions. If you do not agree to these terms,
             please refrain from using the app.</p> 
             <h5>2. User Accounts and Responsibilities</h5>
@@ -640,25 +640,25 @@ export const CreateEventPage = () => {
             <h5>4. Content and Conduct</h5>
             <p>4.1. Users are responsible for the
             content they post and must comply with community guidelines.</p> 
-            <p>4.2. Deca Events reserves the right to remove or modify any content that
+            <p>4.2. Royal Events reserves the right to remove or modify any content that
             violates these terms.</p> 
             <h5>5. Intellectual Property</h5> 
-            <p>5.1. Users retain ownership of the content they upload but grant Deca Events a
+            <p>5.1. Users retain ownership of the content they upload but grant Royal Events a
             license to use, display, and distribute the content within the app.</p>
             <h5>6. Limitation of Liability</h5> 
-            <p>6.1. Deca Events is not liable for any direct, indirect, incidental, special, or consequential damages
+            <p>6.1. Royal Events is not liable for any direct, indirect, incidental, special, or consequential damages
             resulting from the use or inability to use the app.</p> 
             <h5>7. Termination</h5>
-            <p>7.1. Deca Events reserves the right to terminate accounts or
+            <p>7.1. Royal Events reserves the right to terminate accounts or
             restrict access for violation of these terms.</p> 
             <h5>8. Changes to Terms</h5>
-            <p>8.1. Deca Events may modify or update these Terms and Conditions at
+            <p>8.1. Royal Events may modify or update these Terms and Conditions at
             any time. Users will be notified of changes.</p> 
             </div>
             <h1 className="text-[#27AE60]">Privacy Statement</h1><br /> 
             <div className="text-left">
             <h5>1. Information Collection</h5> 
-            <p>1.1. Deca Events collects personal
+            <p>1.1. Royal Events collects personal
             information (name, email, payment details) necessary for event
             creation and attendance.</p> 
             <p>1.2. Usage data and analytics may be
@@ -667,28 +667,28 @@ export const CreateEventPage = () => {
             <p>2.1. Personal information is used to facilitate
             event management, payments, and communications between users and
             event organizers.</p> 
-            <p>2.2. Deca Events does not sell or share personal
+            <p>2.2. Royal Events does not sell or share personal
             information with third parties for marketing purposes.</p> 
             <h5>3. Security</h5>
-            <p>3.1. Deca Events implements industry-standard security measures to
+            <p>3.1. Royal Events implements industry-standard security measures to
             protect user information.</p> 
             <p>3.2. Users are responsible for maintaining
             the security of their account login information.</p> 
             <h5>4. Cookies</h5> 
-            <p>4.1. Deca Events uses cookies to enhance user experience. Users can
+            <p>4.1. Royal Events uses cookies to enhance user experience. Users can
             manage cookie preferences through their browser settings.</p> 
             <h5>5. Third-Party Links</h5> 
             <p>5.1. The app may contain links to third-party
-            websites. Deca Events is not responsible for the privacy practices
+            websites. Royal Events is not responsible for the privacy practices
             or content of these sites.</p> 
             <h5>6. Data Retention</h5> 
-            <p>6.1. Deca Events
+            <p>6.1. Royal Events
             retains user data as long as necessary to provide services or as
             required by law.</p> 
             <h5>7. Contact Information</h5> 
             <p>7.1. For any questions or
             concerns regarding this Privacy Statement, contact
-            deca.event2023@gmail.com.</p>
+            royal_events@gmail.com.</p>
             </div>
           </div>
 

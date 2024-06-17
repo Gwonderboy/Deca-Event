@@ -2,7 +2,6 @@ import {Response} from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 import {Event} from '../../models/eventModel/eventModel'
 import Report from '../../models/reportModel/reportModel'
-
 export const deleteEvent = async(request:JwtPayload, response:Response) => {
     try{
         const userId = request.user.id

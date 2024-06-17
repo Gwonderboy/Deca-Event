@@ -21,7 +21,7 @@ const EarningHistory = () => {
 
     const day = date.getDate();
     const month = date.getMonth() + 1;
-    const year = date.getFullYear().toString().slice(-2); // Get last two digits of the year
+    const year = date.getFullYear().toString().slice(-2);
 
     const hours = date.getHours();
     const minutes = date.getMinutes();
